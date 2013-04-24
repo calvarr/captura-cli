@@ -11,11 +11,15 @@ master=bionel
 
 actualizare (){
 commit1=` wget -qO - https://github.com/$master/captura-cli/commits/master|grep sha|sed -n '1p'|sed 's/ /_/g;s/[><]/ /g'|awk '{print $3}'`
+if [ ! -f $HOME/captura-cli/commit ];then 
+wget -qO - https://github.com/$master/captura-cli/commits/master|grep sha|sed -n '1p'|sed 's/ /_/g;s/[><]/ /g'|awk '{print $3}' > $HOME/captura-cli/commit
+else
 commit2=`cat $HOME/captura-cli/commit|sed -n '$p'`
+fi
 if [[ "$commit1" != "$commit2" ]]; then 
 wget -qO - https://github.com/$master/captura-cli/commits/master|grep sha|sed -n '1p'|sed 's/ /_/g;s/[><]/ /g'|awk '{print $3}' > $HOME/captura-cli/commit
-echo nu uita sa faci git pull
-wget -qO - https://github.com/$master/tvmaxe-cli/commits/master|grep '"message">'|sed 's/<[^>]*>/ /g'|sed '2,$d'
+echo 'NU UITA SA FACI "git pull"!'
+wget -qO - https://github.com/$master/captura-cli/commits/master|grep '"message">'|sed 's/<[^>]*>/ /g'|sed '2,$d'
 fi
 }
 
@@ -43,7 +47,7 @@ fi
 export dir_salvare=$HOME/capturi
 
 # rezolutie maxima desktop
-export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF }'`
+export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF}'`
 
 # rezolutie camera web
 export cam_web=640x480
