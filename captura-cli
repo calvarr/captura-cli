@@ -58,7 +58,7 @@ else
 fi
 
 #force dialog. pt teste
-DIALOG=dialog
+#DIALOG=dialog
 
 export DIALOG
 
