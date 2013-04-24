@@ -93,7 +93,7 @@ case "$selectat1" in
       audio_in=""
       audio_out=""
       video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
-      wmctrl -R $nume
+      wmctrl -a $nume -b add,above
       $(captura) ;;
 
   07) nume_fis="fcap-$data.mp4"
@@ -119,7 +119,7 @@ case "$selectat1" in
       echo $rezolutie #debug
       echo $nume #debug
       video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
-      wmctrl -R $nume
+      wmctrl -a $nume -b add,above
       $(captura) ;;
 
   08) echo "To do!" ;;
