@@ -20,7 +20,8 @@ stty sane
 ############### MENIU ##############
 # fail-safe pentru stergere fisiere temporare
 # in caz de iesire anormala, ex: Ctrl-C
-tempfile1=/tmp/capclitmp1
+tempfile1=`tempfile 2>/dev/null` || tempfile1=/tmp/capclitmp1$$
+#tempfile1=/tmp/capclitmp1
 trap "rm -f $tempfile1" 0 1 2 5 15
 
 until [ "$selectie1" == "1" ]; do
@@ -44,6 +45,7 @@ $DIALOG --title "Captura" --clear \
  "11" "Iesire"  2>$tempfile1
 selectie1=$?
 selectat1=`cat $tempfile1`
+echo $selectat1
 
 case "$selectat1" in
   01) nume_fis="dtcap_fs-$data.mp4"
@@ -93,7 +95,7 @@ case "$selectat1" in
       audio_in=""
       audio_out=""
       video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
-      wmctrl -a $nume -b add,above
+      wmctrl -a $nume #-b add,above
       $(captura) ;;
 
   07) nume_fis="fcap-$data.mp4"
@@ -119,7 +121,7 @@ case "$selectat1" in
       echo $rezolutie #debug
       echo $nume #debug
       video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
-      wmctrl -a $nume -b add,above
+      wmctrl -a $nume #-b add,above
       $(captura) ;;
 
   08) echo "To do!" ;;

@@ -76,7 +76,8 @@ export DIALOG
 
 # fail-safe pentru stergere fisiere temporare
 # in caz de iesire anormala, ex: Ctrl-C
-tempfile=/tmp/capclitmp
+#tempfile=/tmp/capclitmp
+tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/capclitmp$$
 trap "rm -f $tempfile" 0 1 2 5 15
 
 until [ "$selectie0" == "1" ]; do
