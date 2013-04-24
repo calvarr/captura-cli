@@ -23,7 +23,8 @@ export data=`date +%y%m%d%H%M%S`
 export v_player=cvlc
 
 # directorul in care doriti sa se salveze captura
-export dir_salvare=/media/Data/temp
+mkdir $HOME/capturi
+export dir_salvare=$HOME/capturi
 
 # rezolutie maxima desktop
 export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF }'`
