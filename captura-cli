@@ -23,7 +23,9 @@ export data=`date +%y%m%d%H%M%S`
 export v_player=cvlc
 
 # directorul in care doriti sa se salveze captura
-mkdir $HOME/capturi
+if [ ! -d "$HOME/capturi" ]; then
+ mkdir $HOME/capturi
+fi
 export dir_salvare=$HOME/capturi
 
 # rezolutie maxima desktop
