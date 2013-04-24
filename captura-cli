@@ -20,7 +20,7 @@ export procesare=ffmpeg
 export data=`date +%y%m%d%H%M%S`
 
 # alegeti playerul dorit: mplayer, cvlc, vlc etc.
-export v_player=cvlc
+export v_player=mplayer
 
 # directorul in care doriti sa se salveze captura
 if [ ! -d "$HOME/capturi" ]; then
