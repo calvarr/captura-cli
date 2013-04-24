@@ -7,7 +7,6 @@ offsY=-22
 
 #codec video
 video_out="-vcodec libx264 -preset ultrafast"
-#video_out="-f avi -vcodec mpeg4 -vtag xvid"
 
 ############## Functii #############
 
@@ -18,10 +17,11 @@ stty sane
 }
 
 ############### MENIU ##############
-# fail-safe pentru stergere fisiere temporare
-# in caz de iesire anormala, ex: Ctrl-C
+
 tempfile1=`tempfile 2>/dev/null` || tempfile1=/tmp/capclitmp1$$
-#tempfile1=/tmp/capclitmp1
+
+# functie de siguranta pentru stergere fisiere temporare
+# in caz de iesire anormala, ex: Ctrl-C
 trap "rm -f $tempfile1" 0 1 2 5 15
 
 until [ "$selectie1" == "1" ]; do

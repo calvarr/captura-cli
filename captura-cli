@@ -6,7 +6,9 @@
 # bionel: https://github.com/bionel
 # Licenta: nu am stabilit inca
 ######################################
+
 master=bionel
+
 actualizare (){
 commit1=` wget -qO - https://github.com/$master/captura-cli/commits/master|grep sha|sed -n '1p'|sed 's/ /_/g;s/[><]/ /g'|awk '{print $3}'`
 commit2=`cat $HOME/captura-cli/commit|sed -n '$p'`
@@ -16,7 +18,9 @@ echo nu uita sa faci git pull
 wget -qO - https://github.com/$master/tvmaxe-cli/commits/master|grep '"message">'|sed 's/<[^>]*>/ /g'|sed '2,$d'
 fi
 }
+
 actualizare
+
 ######## Valori predefinite ##########
 
 # daca ati creat fisierul .dialogrc personalizat in directorul in care
@@ -24,15 +28,15 @@ actualizare
 #export DIALOGRC=./.dialogrc 
 
 # procesare: ffmpeg sau avconv
-# ATENTIE! pentru ffmpeg, inlocuiti optiunea same_quant cu sameq
 export procesare=ffmpeg
 
 export data=`date +%y%m%d%H%M%S`
 
 # alegeti playerul dorit: mplayer, cvlc, vlc etc.
+# implicit: mplayer
 export v_player=mplayer
 
-# directorul in care doriti sa se salveze captura
+# directorul in care se salveaza captura
 if [ ! -d "$HOME/capturi" ]; then
  mkdir $HOME/capturi
 fi
@@ -43,13 +47,6 @@ export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{pri
 
 # rezolutie camera web
 export cam_web=640x480
-
-############## Functii ################
-
-empty()
-{
-echo "empty routine"
-}
 
 ########### Initializari ##############
 
@@ -67,17 +64,17 @@ else
   DIALOG=dialog
 fi
 
-#force dialog. pt teste
+#fortare DIALOG pt teste in consola
 #DIALOG=dialog
 
 export DIALOG
 
 ########## MENIU PRINCIPAL ###########
 
-# fail-safe pentru stergere fisiere temporare
-# in caz de iesire anormala, ex: Ctrl-C
-#tempfile=/tmp/capclitmp
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/capclitmp$$
+
+# functie de siguranta pentru stergere fisiere temporare
+# in caz de iesire anormala, ex: Ctrl-C
 trap "rm -f $tempfile" 0 1 2 5 15
 
 until [ "$selectie0" == "1" ]; do
