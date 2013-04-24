@@ -1,0 +1,106 @@
+#!/bin/bash
+
+########## Utilitar captura ##########
+# Autori 
+# calvarr: https://github.com/calvarr
+# bionel: https://github.com/bionel
+# Licenta: nu am stabilit inca
+######################################
+
+######## Valori predefinite ##########
+
+# daca ati creat fisierul .dialogrc personalizat in directorul in care
+# aveti scriptul, activati linia de mai jos ↓
+#export DIALOGRC=./.dialogrc 
+
+# procesare: ffmpeg sau avconv
+# ATENTIE! pentru ffmpeg, inlocuiti optiunea same_quant cu sameq
+export procesare=ffmpeg
+
+export data=`date +%y%m%d%H%M%S`
+
+# alegeti playerul dorit: mplayer, cvlc, vlc etc.
+export v_player=cvlc
+
+# directorul in care doriti sa se salveze captura
+export dir_salvare=/media/Data/temp
+
+# rezolutie maxima desktop
+export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF }'`
+
+# rezolutie camera web
+export cam_web=640x480
+
+############## Functii ################
+
+empty()
+{
+echo "empty routine"
+}
+
+########### Initializari ##############
+
+test_tty=`echo $DISPLAY X|awk '{print $2}'`
+
+if [[ "$test_tty" = "X" ]];then
+  if [ `builtin type -p xdialog` ];then DIALOG=xdialog
+    elif [ `builtin type -p Xdialog` ];then DIALOG=Xdialog
+    elif [ `builtin type -p gdialog` ];then DIALOG=gdialog
+    elif [ `builtin type -p kdialog` ];then DIALOG=kdialog
+  else
+  DIALOG=dialog
+  fi
+else
+  DIALOG=dialog
+fi
+
+#force dialog. pt teste
+DIALOG=dialog
+
+export DIALOG
+
+########## MENIU PRINCIPAL ###########
+
+# fail-safe pentru stergere fisiere temporare
+# in caz de iesire anormala, ex: Ctrl-C
+tempfile=/tmp/capclitmp
+trap "rm -f $tempfile" 0 1 2 5 15
+
+until [ "$selectie0" == "1" ]; do
+
+  $DIALOG --backtitle "Utilitar captura v. foarte alfa" \
+	  --title "Varianta calvarr/bionel" --clear \
+          --menu "Meniu Principal:" 20 80 10 \
+   "01" "Configurare" \
+   "02" "Captura" \
+   "03" "Redare" \
+   "04" "Streaming" \
+   "10" "Paraseste programul"  2>$tempfile
+  selectie0=$?
+  selectat=`cat $tempfile`
+  
+  case "$selectat" in
+    01) ./configurare;;
+    02) ./captura;;
+    03) ./redare;;
+    04) ./streaming;;
+    10) echo "Cuuui ma laasi?!! ( opt. $selectat )"
+       echo "desktop=$desktop"
+       echo "test_tty=$test_tty"
+       echo "DIALOG=$DIALOG"
+       exit 0 ;;
+  esac
+
+  if [ "$selectie0" == "255" ]; then
+   echo "Exit by ESC!"
+   exit 0
+  fi
+
+done
+
+#pt. debug
+echo "Exit by done (Cancel)!"
+echo "desktop=$desktop"
+echo "test_tty=$test_tty"
+echo "Dialog=$DIALOG"
+

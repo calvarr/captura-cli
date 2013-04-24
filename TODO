@@ -1,0 +1,28 @@
+----------
+Captura:
+
+Optiunea 3 - captura cu miniatura web(bionel)
+
+Optiuni 6,7 - captura fereastra
+ - de eliminat cele ce returneaza -1 la display (cu un sed/cut ceva) din lista de ferestre, sunt paneluri etc. (calvarr)
+ - de gasit o solutie mai eleganta pentru offset Y (bionel/calvarr)
+
+Optiuni 8,9,10 - captura tty (bionel/calvarr)
+
+De adaugat optiuni "regiune" cu si fara follow mouse (bionel/calvarr)
+
+-----------------
+
+Configurare - de stabilit ce avem nevoie (bionel/calvarr)
+
+-----------------
+
+Redare - de stabilit ce avem nevoie (bionel/calvarr)
+
+-----------------
+
+Streaming - de stabilit ce acem nevoie (bionel/calvarr)
+
+-----------------
+
+Altele: ???

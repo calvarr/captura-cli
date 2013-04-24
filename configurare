@@ -1,0 +1,9 @@
+#!/bin/bash
+
+$DIALOG --title "Configurare" --clear \
+        --yesno "To do" 10 40
+	selectie1=$?
+	  case $selectie1 in
+  	    0) echo "$selectie1" ;;
+  	    1) echo "$selectie1" ;;
+	  esac

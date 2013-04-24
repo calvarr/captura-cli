@@ -1,0 +1,138 @@
+#!/bin/bash -x
+# -x e temporar, pentru debug
+
+# offset: necesar deocamdata, cel putin in XFCE
+# egal cu inaltimea barei de decorare superioare a ferestrelor
+offsY=-22
+
+#codec video
+video_out="-vcodec libx264 -preset ultrafast"
+#video_out="-f avi -vcodec mpeg4 -vtag xvid"
+
+############## Functii #############
+
+captura()
+{
+$procesare $audio_in $video_in $video_out $audio_out $dir_salvare/$nume_fis
+stty sane
+}
+
+############### MENIU ##############
+# fail-safe pentru stergere fisiere temporare
+# in caz de iesire anormala, ex: Ctrl-C
+tempfile1=/tmp/capclitmp1
+trap "rm -f $tempfile1" 0 1 2 5 15
+
+until [ "$selectie1" == "1" ]; do
+
+# reinitializam optiunile audio la fiecare loop
+audio_in="-f alsa -i hw:0"
+audio_out="-acodec libmp3lame -ab 96k"
+
+$DIALOG --title "Captura" --clear \
+        --menu "Alegeti optiunea dorita:" 20 80 15 \
+ "01" "Desktop complet, fara sunet" \
+ "02" "Desktop complet, cu sunet" \
+ "03" "Desktop complet, cu sunet si miniatura camera" \
+ "04" "Camera web, fara sunet" \
+ "05" "Camera web, cu sunet" \
+ "06" "Fereastra, fara sunet" \
+ "07" "Fereastra, cu sunet" \
+ "08" "Terminal tty, fara sunet" \
+ "09" "Terminal tty, cu sunet" \
+ "10" "Terminal tty, cu sunet si miniatura camera" \
+ "11" "Iesire"  2>$tempfile1
+selectie1=$?
+selectat1=`cat $tempfile1`
+
+case "$selectat1" in
+  01) nume_fis="dtcap_fs-$data.mp4"
+      audio_in=""
+      audio_out=""
+      video_in="-f x11grab -r 25 -s $desktop -i :0.0"
+      $(captura) ;;
+
+  02) nume_fis="dtcap-$data.mp4"
+      video_in="-f x11grab -r 25 -s $desktop -i :0.0"
+      $(captura) ;;
+
+  03) echo "To do!" ;;
+
+  04) nume_fis="wcap_fs-$data.mp4"
+      audio_in=""
+      audio_out=""
+      video_in="-f video4linux2 -i /dev/video0 -r 25 -s $cam_web"
+      $(captura) ;;
+
+  05) nume_fis="wcap-$data.mp4"
+      video_in="-f video4linux2 -i /dev/video0 -r 25 -s $cam_web"
+      $(captura) ;;
+
+  06) nume_fis="fcap_fs-$data.mp4"
+      tempfile2=/tmp/capclitmp2
+      trap "rm -f $tempfile2" 0 1 2 5 15
+      lista=`wmctrl -l -G|awk '{print $8"-"$NF}'|nl`
+      $DIALOG  --title "Ferestre deschise" --clear \
+               --menu "Selectati fereastra dorita:" 20 80 10  $lista 2> $tempfile2
+      selectie2=$?
+      fereastra=`cat $tempfile2`
+      display=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $2}'` #debug
+      pozX=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $3}'`
+      pozY=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $4}'`
+      pozY=$(($pozY+$offsY))
+      if [ "$pozY" -lt 0 ]; then #pentru ferestre nedecorate, ex. chromium
+        pozY=0 
+      fi
+      pozitie="$pozX","$pozY"
+      rezolutie=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $5"x"$6}'`
+      nume=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $NF}'`
+      echo $display #debug
+      echo $pozitie #debug
+      echo $rezolutie #debug
+      echo $nume #debug
+      audio_in=""
+      audio_out=""
+      video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
+      wmctrl -R $nume
+      $(captura) ;;
+
+  07) nume_fis="fcap-$data.mp4"
+      tempfile2=/tmp/capclitmp2
+      trap "rm -f $tempfile2" 0 1 2 5 15
+      lista=`wmctrl -l -G|awk '{print $8"-"$NF}'|nl`
+      $DIALOG  --title "Ferestre deschise" --clear \
+               --menu "Selectati fereastra dorita:" 20 80 10  $lista 2> $tempfile2
+      selectie2=$?
+      fereastra=`cat $tempfile2`
+      display=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $2}'` #debug
+      pozX=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $3}'`
+      pozY=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $4}'`
+      pozY=$(($pozY+$offsY))
+      if [ "$pozY" -lt 0 ]; then #pentru ferestre nedecorate maximizate, ex. chromium
+        pozY=0 
+      fi
+      pozitie="$pozX","$pozY"
+      rezolutie=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $5"x"$6}'`
+      nume=`wmctrl -l -G|sed -n "${fereastra}p"|awk '{print $NF}'`
+      echo $display #debug
+      echo $pozitie #debug
+      echo $rezolutie #debug
+      echo $nume #debug
+      video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
+      wmctrl -R $nume
+      $(captura) ;;
+
+  08) echo "To do!" ;;
+  09) echo "To do!" ;;
+  10) echo "To do!" ;;
+
+  11) echo "Iesire - opt. $selectat1"
+      exit 0 ;;
+esac
+
+if [ "$selectie1" == "255" ]; then
+  echo "Exit by ESC!"
+  exit 0
+fi
+
+done
