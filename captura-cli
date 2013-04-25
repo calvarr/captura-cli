@@ -6,7 +6,17 @@
 # bionel: https://github.com/bionel
 # Licenta: nu am stabilit inca
 ######################################
-
+master=bionel
+actualizare (){
+commit1=` wget -qO - https://github.com/$master/captura-cli/commits/master|grep sha|sed -n '1p'|sed 's/ /_/g;s/[><]/ /g'|awk '{print $3}'`
+commit2=`cat $HOME/captura-cli/commit|sed -n '$p'`
+if [[ "$commit1" != "$commit2" ]]; then 
+wget -qO - https://github.com/$master/captura-cli/commits/master|grep sha|sed -n '1p'|sed 's/ /_/g;s/[><]/ /g'|awk '{print $3}' > $HOME/captura-cli/commit
+echo nu uita sa faci git pull
+wget -qO - https://github.com/$master/tvmaxe-cli/commits/master|grep '"message">'|sed 's/<[^>]*>/ /g'|sed '2,$d'
+fi
+}
+actualizare
 ######## Valori predefinite ##########
 
 # daca ati creat fisierul .dialogrc personalizat in directorul in care
