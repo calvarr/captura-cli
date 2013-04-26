@@ -18,3 +18,15 @@ Dependinte:
 ===========
 Configurare fbdev (captura TTY):
 # chmod a+rw /dev/fb0
+
+===========
+Stream nesecurizat:
+	- pentru a reda streamul webcam (player http://localhost:9003/webcam.ffm)
+	- Pentru a difuza streamul webcam in reteaua externa:
+	testam daca este deschis portul 9003:
+$ telnet IP_extern 9003
+	tunelizam prin ssh:
+ssh nume@IPextern -R 9003:127.0.0.1:9003
+	redam:
+player http://IPextern:9003/webcam.mjpeg
+
