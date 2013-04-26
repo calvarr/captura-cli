@@ -36,6 +36,8 @@ export procesare=ffmpeg
 export stream_server=ffserver
 export data=`date +%y%m%d%H%M%S`
 
+#locatie
+export locatia=`pwd`
 # alegeti playerul dorit: mplayer, cvlc, vlc etc.
 # implicit: mplayer
 export v_player=mplayer
@@ -91,7 +93,7 @@ until [ "$selectie0" == "1" ]; do
    "02" "Captura" \
    "03" "Redare" \
    "04" "Streaming" \
-   "10" "Paraseste programul"  2>$tempfile
+   "05" "Paraseste programul"  2>$tempfile
   selectie0=$?
   selectat=`cat $tempfile`
   
