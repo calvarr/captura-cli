@@ -1,9 +1,9 @@
 #!/bin/bash
 
 $DIALOG --title "Streaming" --clear \
-        --yesno "To do" 10 40
+        --yesno "Doriti sa difuzati in retea webcam?" 10 40
 	selectie1=$?
 	  case $selectie1 in
-  	    0) echo "$selectie1" ;;
+  	    0) ffserver -f $HOME/captura-cli/stream.conf & $procesare -v verbose -r 10 -s $cam_web -f video4linux2 -i /dev/video0 http://localhost:9003/webcam.ffm ;;
   	    1) echo "$selectie1" ;;
 	  esac
