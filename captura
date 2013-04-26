@@ -73,7 +73,7 @@ case "$selectat1" in
   06) nume_fis="fcap_fs-$data.mp4"
       tempfile2=/tmp/capclitmp2
       trap "rm -f $tempfile2" 0 1 2 5 15
-      lista=`wmctrl -l -G|awk '{print $8"-"$NF}'|nl`
+      lista=`wmctrl -l -G|sed '/-1/d'|awk '{print $8"-"$NF}'|nl`
       $DIALOG  --title "Ferestre deschise" --clear \
                --menu "Selectati fereastra dorita:" 20 80 10  $lista 2> $tempfile2
       selectie2=$?
@@ -101,7 +101,7 @@ case "$selectat1" in
   07) nume_fis="fcap-$data.mp4"
       tempfile2=/tmp/capclitmp2
       trap "rm -f $tempfile2" 0 1 2 5 15
-      lista=`wmctrl -l -G|awk '{print $8"-"$NF}'|nl`
+      lista=`wmctrl -l -G|sed '/-1/d'|awk '{print $8"-"$NF}'|nl`
       $DIALOG  --title "Ferestre deschise" --clear \
                --menu "Selectati fereastra dorita:" 20 80 10  $lista 2> $tempfile2
       selectie2=$?
