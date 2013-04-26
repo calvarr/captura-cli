@@ -10,13 +10,14 @@ until [ "$selectie0" == "1" ]; do
    "02" "Stream Webcam + audio" \
    "03" "Stream Desktop" \
    "04" "Stream Desktop + audio" \
-   "05" "Paraseste programul"  2>$tempfile
+   "05" "Alege alt dispozitiv de captura" \
+   "06" "Paraseste programul"  2>$tempfile
   selectie0=$?
   selectat=`cat $tempfile`
   
   case "$selectat" in
-    01) 
-	video_in="-v verbose -r 10 -s $cam_web -f video4linux2 -i /dev/video0 http://localhost:9003/webcam.ffm"
+    01) echo devv $dev #debug
+	video_in="-v verbose -r 10 -s $cam_web -f video4linux2 -i /dev/$dev http://localhost:9003/webcam.ffm"
 	audio_in=""
       	audio_out=""
 	$stream_server -f $locatia/stream.conf & \
@@ -29,7 +30,17 @@ until [ "$selectie0" == "1" ]; do
 	$stream_server -f $locatia/stream.conf & \
 	$procesare  $video_in ;;
     04) echo "TO DO" ;;
-    05)  echo "Cuuui ma laasi?!! ( opt. $selectat )"
+    05) tempfile2=/tmp/capclitmp2
+	trap "rm -f $tempfile2" 0 1 2 5 15
+	dispozitive=`ls /dev|grep video|nl`
+	$DIALOG  --title "Ferestre deschise" --clear \
+                 --menu "Selectati fereastra dorita:" 20 80 10 $dispozitive 2> $tempfile2
+	selectie3=$?
+	dispozitiv_s=`cat $tempfile2`
+	export dev=`ls /dev|grep video|sed -n "${dispozitiv_s}p"`
+	echo dev $dev #debug
+	;;
+    06)  echo "Cuuui ma laasi?!! ( opt. $selectat )"
          echo "desktop=$desktop"
          echo "test_tty=$test_tty"
          echo "DIALOG=$DIALOG"
