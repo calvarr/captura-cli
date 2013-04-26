@@ -23,7 +23,7 @@ wget -qO - https://github.com/$master/captura-cli/commits/master|grep '"message"
 fi
 }
 
-actualizare
+#actualizare
 
 ######## Valori predefinite ##########
 
@@ -33,7 +33,7 @@ actualizare
 
 # procesare: ffmpeg sau avconv
 export procesare=ffmpeg
-
+export stream_server=ffserver
 export data=`date +%y%m%d%H%M%S`
 
 # alegeti playerul dorit: mplayer, cvlc, vlc etc.
@@ -76,6 +76,7 @@ export DIALOG
 ########## MENIU PRINCIPAL ###########
 
 tempfile=`tempfile 2>/dev/null` || tempfile=/tmp/capclitmp$$
+export tempfile
 
 # functie de siguranta pentru stergere fisiere temporare
 # in caz de iesire anormala, ex: Ctrl-C
@@ -99,7 +100,7 @@ until [ "$selectie0" == "1" ]; do
     02) ./captura;;
     03) ./redare;;
     04) ./streaming;;
-    10) echo "Cuuui ma laasi?!! ( opt. $selectat )"
+    05) echo "Cuuui ma laasi?!! ( opt. $selectat )"
        echo "desktop=$desktop"
        echo "test_tty=$test_tty"
        echo "DIALOG=$DIALOG"
