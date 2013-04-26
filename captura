@@ -124,8 +124,15 @@ case "$selectat1" in
       wmctrl -a $nume #-b add,above
       $(captura) ;;
 
-  08) echo "To do!" ;;
-  09) echo "To do!" ;;
+  08) nume_fis="ttycap_fs-$data.mp4"
+      audio_in=""
+      audio_out=""
+      video_in="-f fbdev -i /dev/fb0 -r 25 " #-s $desktop
+      $(captura) ;;
+  09) 
+      nume_fis="ttycap-$data.mp4"
+      video_in="-f fbdev -i /dev/fb0 -r 25 -s " #$desktop"
+      $(captura) ;;
   10) echo "To do!" ;;
 
   11) echo "Iesire - opt. $selectat1"
