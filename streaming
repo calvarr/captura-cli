@@ -1,9 +1,41 @@
 #!/bin/bash
 
-$DIALOG --title "Streaming" --clear \
-        --yesno "Doriti sa difuzati in retea webcam?" 10 40
-	selectie1=$?
-	  case $selectie1 in
-  	    0) ffserver -f $HOME/captura-cli/stream.conf & $procesare -v verbose -r 10 -s $cam_web -f video4linux2 -i /dev/video0 http://localhost:9003/webcam.ffm ;;
-  	    1) echo "$selectie1" ;;
+
+until [ "$selectie0" == "1" ]; do
+
+  $DIALOG --backtitle "Streaming" \
+	  --title "Varianta calvarr/bionel" --clear \
+          --menu "Meniu Principal:" 20 80 10 \
+   "01" "Stream Webcam" \
+   "02" "Stream Webcam + audio" \
+   "03" "Stream Desktop" \
+   "04" "Stream Desktop + audio" \
+   "05" "Paraseste programul"  2>$tempfile
+  selectie0=$?
+  selectat=`cat $tempfile`
+  
+  case "$selectat" in
+    01) video_in="-v verbose -r 10 -s $cam_web -f video4linux2"
+	$stream_server -f $HOME/captura-cli/stream.conf & \
+	$(captura) \
+	http://localhost:9003/webcam.ffm ;;
+    02) echo TO DO ;;
+    03) video_in="-v verbose -r 10 -f x11grab -r 25 -s $desktop -i :0.0"
+	$stream_server -f $HOME/captura-cli/stream.conf & \
+	$(captura) \
+	http://localhost:9003/webcam.ffm ;;
+    04) echo TO DO ;;
+    05)  echo "Cuuui ma laasi?!! ( opt. $selectat )"
+         echo "desktop=$desktop"
+         echo "test_tty=$test_tty"
+         echo "DIALOG=$DIALOG"
+         exit 0 ;;
+
 	  esac
+
+  if [ "$selectie0" == "255" ]; then
+   echo "Exit by ESC!"
+   exit 0
+  fi
+
+done
