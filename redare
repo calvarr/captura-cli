@@ -1,9 +1,12 @@
 #!/bin/bash
 
-$DIALOG --title "Redare" --clear \
-        --yesno "To do" 10 40
-	selectie1=$?
-	  case $selectie1 in
-  	    0) echo "$selectie1" ;;
-  	    1) echo "$selectie1" ;;
-	  esac
+tempfile2=/tmp/capclitmp2
+trap "rm -f $tempfile2" 0 1 2 5 15
+capturi=`ls $HOME/capturi|nl`
+      $DIALOG  --title "Redare" --clear \
+               --menu "Selectati captura dorita :" 20 80 10  $capturi 2> $tempfile2
+      selectie2=$?
+s_captura=`cat $tempfile2`
+captura=`ls $HOME/capturi|sed -n "${s_captura}p"`
+echo captura $captura #debug
+$v_player $HOME/capturi/$captura
