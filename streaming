@@ -15,16 +15,20 @@ until [ "$selectie0" == "1" ]; do
   selectat=`cat $tempfile`
   
   case "$selectat" in
-    01) video_in="-v verbose -r 10 -s $cam_web -f video4linux2"
-	$stream_server -f $HOME/captura-cli/stream.conf & \
-	$(captura) \
-	http://localhost:9003/webcam.ffm ;;
-    02) echo TO DO ;;
-    03) video_in="-v verbose -r 10 -f x11grab -r 25 -s $desktop -i :0.0"
-	$stream_server -f $HOME/captura-cli/stream.conf & \
-	$(captura) \
-	http://localhost:9003/webcam.ffm ;;
-    04) echo TO DO ;;
+    01) 
+	video_in="-v verbose -r 10 -s $cam_web -f video4linux2 -i /dev/video0 http://localhost:9003/webcam.ffm"
+	audio_in=""
+      	audio_out=""
+	$stream_server -f $locatia/stream.conf & \
+	$procesare  $video_in ;;
+    02) echo "TO DO" ;;
+    03) 
+	video_in="-v verbose -r 10 -f x11grab -r 25 -s $desktop -i :0.0 http://localhost:9003/webcam.ffm"
+	audio_in=""
+      	audio_out=""
+	$stream_server -f $locatia/stream.conf & \
+	$procesare  $video_in ;;
+    04) echo "TO DO" ;;
     05)  echo "Cuuui ma laasi?!! ( opt. $selectat )"
          echo "desktop=$desktop"
          echo "test_tty=$test_tty"
