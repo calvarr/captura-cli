@@ -1,5 +1,5 @@
 #!/bin/bash
-
+. `pwd`/config
 tempfile2=/tmp/capclitmp2
 trap "rm -f $tempfile2" 0 1 2 5 15
 capturi=`ls $HOME/capturi|nl`
@@ -8,5 +8,5 @@ capturi=`ls $HOME/capturi|nl`
       selectie2=$?
 s_captura=`cat $tempfile2`
 captura=`ls $HOME/capturi|sed -n "${s_captura}p"`
-echo captura $captura #debug
+echo captura $captura v_player $v_player #debug
 $v_player $HOME/capturi/$captura
