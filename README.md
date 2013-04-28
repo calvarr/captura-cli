@@ -10,7 +10,7 @@ bionel: https://github.com/bionel
 
 ===========
 Dependinte:
-	dialog
+	dialog sau/si xdialog,gdialog,kdialog etc.
 	ffmpeg sau avconv
 	fbdev
 	cvlc sau mplayer
@@ -21,7 +21,7 @@ Configurare fbdev (captura TTY):
 
 ===========
 Stream nesecurizat:
-	- pentru a reda streamul webcam (player http://localhost:9003/webcam.ffm)
+	- pentru a reda streamul webcam (player http://localhost:9003/webcam.mjpeg)
 	- Pentru a difuza streamul webcam in reteaua externa:
 	testam daca este deschis portul 9003:
 $ telnet IP_extern 9003
