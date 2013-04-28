@@ -1,5 +1,5 @@
 #!/bin/bash -x
-
+. `pwd`/config
 ########## Utilitar captura ##########
 # Autori 
 # calvarr: https://github.com/calvarr
@@ -32,27 +32,28 @@ fi
 #export DIALOGRC=./.dialogrc 
 
 # procesare: ffmpeg sau avconv
-export procesare=ffmpeg
-export stream_server=ffserver
-export data=`date +%y%m%d%H%M%S`
+#export procesare=ffmpeg
+#export stream_server=ffserver
+#export data=`date +%y%m%d%H%M%S`
 
 #locatie
-export locatia=`pwd`
+#export locatia=`pwd`
 # alegeti playerul dorit: mplayer, cvlc, vlc etc.
 # implicit: mplayer
-export v_player=mplayer
+#export v_player="mplayer -ao alsa,pulse, -vo xv,fbdev2,"
 
 # directorul in care se salveaza captura
-if [ ! -d "$HOME/capturi" ]; then
- mkdir $HOME/capturi
-fi
-export dir_salvare=$HOME/capturi
+#if [ ! -d "$HOME/capturi" ]; then
+ #mkdir $HOME/capturi
+#fi
+$d_salvare
+#export dir_salvare=$HOME/capturi
 
 # rezolutie maxima desktop
-export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF}'`
+#export desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF}'`
 
 # rezolutie camera web
-export cam_web=640x480
+#export cam_web=640x480
 
 ########### Initializari ##############
 
