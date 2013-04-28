@@ -1,7 +1,6 @@
 #!/bin/bash
 . `pwd`/config
 echo locatia $locatia #debug
-procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
   trap "rm -f $tempfile" 0 1 2 5 15
 	$DIALOG --backtitle "Utilitar captura v. foarte alfa" \
 	 	 --title "Varianta calvarr/bionel" --clear \
@@ -34,26 +33,25 @@ procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
 				selectat1=`cat $tempfile`
 			rand=`cat $locatia/config|sed -n '/v_player/='`
 			sed -i "${rand}d" $locatia/config
-
-			player_conf=`grep -i v_player= $locatia/config|sed "s/'/ /"|awk '{print $2}'`
-			echo player_conf $player_conf #debug
 				case "$selectat1" in
 				 01) sed -i "${rand}i v_player='mplayer -ao alsa,pulse, -vo xv,fbdev2,'" $locatia/config ;;
 				 02) sed -i "${rand}i v_player='cvlc vlc://quit'"  $locatia/config ;;
 				esac ;;
  03) echo "to do";;
  04) echo "to do";;
- 05) 		tempfile2=/tmp/capclitmp2
-		trap "rm -f $tempfile2" 0 1 2 5 15
+ 05) 		
+		trap "rm -f $tempfile" 0 1 2 5 15
 		dispozitive=`ls /dev|grep video|nl`
 		$DIALOG  --title "Ferestre deschise" --clear \
-                 --radiolist "Selectati fereastra dorita:" 20 80 10 $dispozitive off 2> $tempfile2
+                	 --menu "Selectati fereastra dorita:" 20 80 10  $dispozitive  2> $tempfile
 		selectie3=$?
-		dispozitiv_s=`cat $tempfile2`
+		dispozitiv_s=`cat $tempfile`
+		rand=`cat $locatia/config|sed -n '/dev=/='`
 		dev=`ls /dev|grep video|sed -n "${dispozitiv_s}p"`
-		disp_conf=`grep -i dev= $locatia/config|sed 's/=/ /'|awk '{print $2}'`
-		sed -i "s/${disp_conf}/${dev}/" $locatia/config
-		;;
+		sed -i "${rand}d" $locatia/config
+		sed -i "${rand}i dev=$dev" $locatia/config ;;
+		
+		
 
 
   esac
