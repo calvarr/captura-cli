@@ -1,1 +1,26 @@
 ### Fisier config #####
+# procesare: ffmpeg sau avconv
+procesare=ffmpeg
+stream_server=ffserver
+data=`date +%y%m%d%H%M%S`
+
+#locatie
+locatia=`pwd`
+# alegeti playerul dorit: mplayer, cvlc, vlc etc.
+v_player='mplayer -ao alsa,pulse, -vo xv,fbdev2,'
+
+# directorul in care se salveaza captura
+d_salvare (){
+if [ ! -d "$HOME/capturi" ]; then
+ mkdir $HOME/capturi
+fi
+}
+dir_salvare="$HOME/capturi"
+
+# rezolutie maxima desktop
+desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF}'`
+
+# rezolutie camera web
+cam_web=640x480
+# dispozitiv de captura
+dev=video0
