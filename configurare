@@ -1,6 +1,7 @@
 #!/bin/bash
 . `pwd`/config
 echo locatia $locatia #debug
+procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
   trap "rm -f $tempfile" 0 1 2 5 15
 	$DIALOG --backtitle "Utilitar captura v. foarte alfa" \
 	 	 --title "Varianta calvarr/bionel" --clear \
@@ -8,8 +9,11 @@ echo locatia $locatia #debug
 	"01" "Mod procesare" \
 	"02" "Player redare" \
 	"03" "Cale salvare capturi" \
-	"04" "Rezolutie camera web" \
-	"05" "Dispoozitiv de captura"  2>$tempfile
+	"04" "Modifica rezolutie camera web" \
+	"05" "Modifica rezolutia de stream" \
+	"06" "Alege alt dispozitiv de captura video" \
+	"07" "Alege alt dispozitiv de captura audio" \
+	"08" "Corectie chenar captura in functie de decoratiunea ferestrei"  2>$tempfile
 	selectie0=$?
   selectat=`cat $tempfile`
   case "$selectat" in
@@ -33,25 +37,29 @@ echo locatia $locatia #debug
 				selectat1=`cat $tempfile`
 			rand=`cat $locatia/config|sed -n '/v_player/='`
 			sed -i "${rand}d" $locatia/config
+
+			player_conf=`grep -i v_player= $locatia/config|sed "s/'/ /"|awk '{print $2}'`
+			echo player_conf $player_conf #debug
 				case "$selectat1" in
 				 01) sed -i "${rand}i v_player='mplayer -ao alsa,pulse, -vo xv,fbdev2,'" $locatia/config ;;
 				 02) sed -i "${rand}i v_player='cvlc vlc://quit'"  $locatia/config ;;
 				esac ;;
  03) echo "to do";;
  04) echo "to do";;
- 05) 		
-		trap "rm -f $tempfile" 0 1 2 5 15
+ 05) echo "to do";;
+ 06) 		tempfile2=/tmp/capclitmp2
+		trap "rm -f $tempfile2" 0 1 2 5 15
 		dispozitive=`ls /dev|grep video|nl`
 		$DIALOG  --title "Ferestre deschise" --clear \
-                	 --menu "Selectati fereastra dorita:" 20 80 10  $dispozitive  2> $tempfile
+                 --radiolist "Selectati fereastra dorita:" 20 80 10 $dispozitive off 2> $tempfile2
 		selectie3=$?
-		dispozitiv_s=`cat $tempfile`
-		rand=`cat $locatia/config|sed -n '/dev=/='`
+		dispozitiv_s=`cat $tempfile2`
 		dev=`ls /dev|grep video|sed -n "${dispozitiv_s}p"`
-		sed -i "${rand}d" $locatia/config
-		sed -i "${rand}i dev=$dev" $locatia/config ;;
-		
-		
+		disp_conf=`grep -i dev= $locatia/config|sed 's/=/ /'|awk '{print $2}'`
+		sed -i "s/${disp_conf}/${dev}/" $locatia/config
+		;;
+ 07) echo "to do";;
+ 08) echo "to do";;
 
 
   esac
