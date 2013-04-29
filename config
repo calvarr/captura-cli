@@ -17,6 +17,10 @@ fi
 }
 dir_salvare="$HOME/capturi"
 
+# offset: necesar deocamdata, cel putin in XFCE
+# egal cu inaltimea barei de decorare superioare a ferestrelor
+offsY=-22
+
 # rezolutie maxima desktop
 desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF}'`
 
