@@ -3,7 +3,8 @@
 procesare=ffmpeg
 stream_server=ffserver
 data=`date +%y%m%d%H%M%S`
-
+#GUI-NoGUI (gui ori nogui)
+interfata=gui 
 #locatie
 locatia=`pwd`
 # alegeti playerul dorit: mplayer, cvlc, vlc etc.
@@ -15,7 +16,7 @@ if [ ! -d "$HOME/capturi" ]; then
  mkdir $HOME/capturi
 fi
 }
-dir_salvare="$HOME/capturi"
+dir_salvare=$HOME/capturi
 
 # offset: necesar deocamdata, cel putin in XFCE
 # egal cu inaltimea barei de decorare superioare a ferestrelor
