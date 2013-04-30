@@ -7,6 +7,9 @@ Optiunea 3 - captura cu miniatura web(bionel)
  - de gasit o solutie mai eleganta pentru offset Y (bionel/calvarr)
  - de verificat scriptul, aducerea lui intro forma mai eleganta (bionel)
 - de terminat configurarea (calvarr/bionel)
+- de mutat fisierele configurabile (conf, stream.conf) intro alta locatie, pentru ca utilizatorul
+sa poata face update prin git pull
+- de studiat daca e necesar adaugarea unor variabile in meniuri (ex. in meniul de configurare : actual este setat ffmpeg)
 ----------------------
 - de studiat posibilitatea captura flash web (calvarr)
 ----------------------
@@ -28,7 +31,8 @@ Redare - de stabilit ce avem nevoie (bionel/calvarr)
 
 Streaming - de stabilit ce acem nevoie (bionel/calvarr)
 - stream audio/video
-- stream tty
+
 -----------------
 
 Altele: ???
+- Modul spion :) (am putea sa ne conectam de la distanta prin ssh, sau sa lasam ca scriptul sa mici capturi, sau poze desktop, inregistrari audio, pe care sa le trimita pe mail etc...)
