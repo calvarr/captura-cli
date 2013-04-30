@@ -13,11 +13,13 @@ procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
 	"05" "Modifica rezolutia de stream" \
 	"06" "Alege alt dispozitiv de captura video" \
 	"07" "Alege alt dispozitiv de captura audio" \
-	"08" "Corectie chenar captura in functie de decoratiunea ferestrei"  2>$tempfile
+	"08" "Corectie chenar captura in functie de decoratiunea ferestrei" \
+	"09" "GUI/NOGUI"  2>$tempfile
 	selectie0=$?
   selectat=`cat $tempfile`
+  trap "rm -f $tempfile" 0 1 2 5 15
   case "$selectat" in
- 01)		trap "rm -f $tempfile" 0 1 2 5 15
+ 01)		
 		$DIALOG --title "Varianta calvarr/bionel" --clear \
 		--radiolist "Meniu Principal:" 20 80 10 \
 			"01" "ffmpeg" ON \
@@ -29,37 +31,84 @@ procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
 				 01) sed -i "s/=${procesator}/=ffmpeg/" $locatia/config ;;
 				 02) sed -i "s/=${procesator}/=avconv/" $locatia/config ;;
 				esac ;;
+
  02) 		$DIALOG  --title "Ferestre deschise" --clear \
-                 --radiolist "Selectati fereastra dorita:" 20 80 10 \
+                	 --radiolist "Selectati fereastra dorita:" 20 80 10 \
 			"01" "Mplayer" ON \
 			"02" "cvlc" off 2>$tempfile
 			selectie0=$?
 				selectat1=`cat $tempfile`
 			rand=`cat $locatia/config|sed -n '/v_player/='`
-			sed -i "${rand}d" $locatia/config
-
 			player_conf=`grep -i v_player= $locatia/config|sed "s/'/ /"|awk '{print $2}'`
-			echo player_conf $player_conf #debug
+			echo player_conf $player_conf #debug posibil de bagat ca variabila in meniu...
 				case "$selectat1" in
-				 01) sed -i "${rand}i v_player='mplayer -ao alsa,pulse, -vo xv,fbdev2,'" $locatia/config ;;
-				 02) sed -i "${rand}i v_player='cvlc vlc://quit'"  $locatia/config ;;
+				 01) sed -i "${rand}d" $locatia/config
+		sed -i "${rand}i v_player='mplayer -ao alsa,pulse, -vo xv,fbdev2,'" $locatia/config ;;
+				 02) sed -i "${rand}d" $locatia/config
+		sed -i "${rand}i v_player='cvlc vlc://quit'"  $locatia/config ;;
 				esac ;;
- 03) echo "to do";;
- 04) echo "to do";;
- 05) echo "to do";;
- 06) 		tempfile2=/tmp/capclitmp2
-		trap "rm -f $tempfile2" 0 1 2 5 15
+ 03) 		$DIALOG --title "Inputbox - Example" \
+		--backtitle "unstableme.blogspot.com" \
+		--inputbox "Enter your favourite OS here" 8 50  2>$tempfile
+			selectat1=`cat $tempfile`
+			echo selectat1 $selectat1 #debug
+			rand=`cat $locatia/config|sed -n '/dir_salvare=/='`
+			sed -i "${rand}d" $locatia/config
+			sed -i "${rand}i dir_salvare=$selectat1"  $locatia/config ;;
+		
+ 04) 		$DIALOG --title "Inputbox - Example" \
+		--backtitle "unstableme.blogspot.com" \
+		--inputbox "Enter your favourite OS here" 8 50  2>$tempfile
+			selectat1=`cat $tempfile`
+			echo selectat1 $selectat1 #debug
+			rand=`cat $locatia/config|sed -n '/cam_web=/='`
+			sed -i "${rand}d" $locatia/config
+			sed -i "${rand}i cam_web=$selectat1"  $locatia/config ;;
+
+ 05) 		$DIALOG --title "Inputbox - Example" \
+		--backtitle "unstableme.blogspot.com" \
+		--inputbox "Enter your favourite OS here" 8 50  2>$tempfile
+			selectat1=`cat $tempfile`
+			echo selectat1 $selectat1 #debug
+			rand=`cat $locatia/stream.conf|sed -n '/VideoSize/='`
+			sed -i "${rand}d" $locatia/stream.conf
+			sed -i "${rand}i VideoSize $selectat1"  $locatia/stream.conf ;;
+
+ 06) 		#tempfile2=/tmp/capclitmp2
+		#trap "rm -f $tempfile2" 0 1 2 5 15
 		dispozitive=`ls /dev|grep video|nl`
 		$DIALOG  --title "Ferestre deschise" --clear \
-                 --radiolist "Selectati fereastra dorita:" 20 80 10 $dispozitive off 2> $tempfile2
-		selectie3=$?
-		dispozitiv_s=`cat $tempfile2`
+                 --radiolist "Selectati fereastra dorita:" 20 80 10 $dispozitive off 2> $tempfile
+		selectie0=$?
+		dispozitiv_s=`cat $tempfile`
 		dev=`ls /dev|grep video|sed -n "${dispozitiv_s}p"`
 		disp_conf=`grep -i dev= $locatia/config|sed 's/=/ /'|awk '{print $2}'`
 		sed -i "s/${disp_conf}/${dev}/" $locatia/config
 		;;
- 07) echo "to do";;
- 08) echo "to do";;
 
+ 07) echo "to do";;
+
+ 08) 		$DIALOG --title "Inputbox - Example" \
+			--backtitle "unstableme.blogspot.com" \
+			--inputbox "Enter your favourite OS here" 8 50  2>$tempfile
+			selectat1=`cat $tempfile`
+			echo selectat1 $selectat1 #debug
+			rand=`cat $locatia/config|sed -n '/offsY=/='`
+			sed -i "${rand}d" $locatia/config
+			sed -i "${rand}i offsY=$selectat1" $locatia/config ;;
+
+ 09) 		$DIALOG  --title "Ferestre deschise" --clear \
+                	 --radiolist "Selectati fereastra dorita:" 20 80 10 \
+			"01" "GUI" ON \
+			"02" "NoGUi" off 2>$tempfile
+			selectie0=$?
+				selectat1=`cat $tempfile`
+			rand=`cat $locatia/config|sed -n '/interfata=/='`
+				case "$selectat1" in
+				 01) sed -i "${rand}d" $locatia/config
+		sed -i "${rand}i interfata=gui " $locatia/config ;;
+				 02) sed -i "${rand}d" $locatia/config
+		sed -i "${rand}i interfata=nogui "  $locatia/config ;;
+				esac ;;
 
   esac
