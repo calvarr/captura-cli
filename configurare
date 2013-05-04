@@ -10,11 +10,12 @@ procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
 	"02" "Player redare" \
 	"03" "Cale salvare capturi" \
 	"04" "Modifica rezolutie camera web" \
-	"05" "Modifica rezolutia de stream" \
+	"05" "Modifica rezolutia stream" \
 	"06" "Alege alt dispozitiv de captura video" \
 	"07" "Alege alt dispozitiv de captura audio" \
 	"08" "Corectie chenar captura in functie de decoratiunea ferestrei" \
-	"09" "GUI/NOGUI"  2>$tempfile
+	"09" "Rezolutie chenar urmarire soarece" \
+	"10" "GUI/NOGUI"  2>$tempfile
 	selectie0=$?
   selectat=`cat $tempfile`
   trap "rm -f $tempfile" 0 1 2 5 15
@@ -97,7 +98,16 @@ procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
 			sed -i "${rand}d" $locatia/config
 			sed -i "${rand}i offsY=$selectat1" $locatia/config ;;
 
- 09) 		$DIALOG  --title "Ferestre deschise" --clear \
+ 09)		$DIALOG --title "Inputbox - Example" \
+		--backtitle "unstableme.blogspot.com" \
+		--inputbox "Enter your favourite OS here" 8 50  2>$tempfile
+			selectat1=`cat $tempfile`
+			echo selectat1 $selectat1 #debug
+			rand=`cat $locatia/config|sed -n '/rezfollow=/='`
+			sed -i "${rand}d" $locatia/config
+			sed -i "${rand}i rezfollow=$selectat1"  $locatia/config ;;
+
+ 10) 		$DIALOG  --title "Ferestre deschise" --clear \
                 	 --radiolist "Selectati fereastra dorita:" 20 80 10 \
 			"01" "GUI" ON \
 			"02" "NoGUi" off 2>$tempfile
