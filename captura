@@ -7,10 +7,14 @@
 
 
 ############## Functii #############
-
+#mascare ffmpeg
+#ffmpeg ... 2> /dev/null
+#-loglevel 0
+#-loglevel quiet
 captura()
 {
-$procesare $audio_in $video_in $video_out $audio_out $dir_salvare/$nume_fis
+echo procesez...
+$procesare -loglevel 0 $audio_in $video_in $video_out $audio_out $dir_salvare/$nume_fis
 stty sane
 }
 
@@ -56,7 +60,7 @@ case "$selectat1" in
       audio_in=""
       audio_out=""
       video_in="-f x11grab -r 25 -s $desktop -i :0.0"
-      $(captura) ;;
+      $(captura);;
 
   02) nume_fis="dtcap-$data.mp4"
       video_in="-f x11grab -r 25 -s $desktop -i :0.0"
