@@ -1,0 +1,21 @@
+#!/bin/bash -x
+. `pwd`/config
+$DIALOG --backtitle "Utilitar captura v. foarte alfa" \
+	 	 --title "Varianta calvarr/bionel" --clear \
+         	  --menu "Meniu Principal:" 20 80 10 \
+	"01" "Screenshot Desktop" \
+	"02" "Screenshot TTY"   \
+	"03" "Screenshot Webcam" 2>$tempfile
+  selectie0=$?
+  selectat=`cat $tempfile`
+case "$selectat" in
+    01) $procesare -f x11grab -r 25 -s $desktop -i :0.0 \
+	$dir_salvare/screenshot_Desktop$$.jpeg;;
+
+    02) $procesare -f fbdev -frames:v 1 -r 1 -i /dev/fb0 \
+	$dir_salvare/screenshot_TTY$$.jpeg;;
+
+    03) $procesare -f video4linux2 -i /dev/$dev -f image2 \
+	-y -ss 0.375 -q 0 -vframes 1 $dir_salvare/screenshot_Webcam$$.jpeg;; #-ss primele cadre sunt intunecate pana se calibreaza webcam
+
+esac
