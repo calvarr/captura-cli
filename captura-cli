@@ -97,18 +97,20 @@ until [ "$selectie0" == "1" ]; do
           --menu "Meniu Principal:" 20 80 10 \
    "01" "Configurare" \
    "02" "Captura" \
-   "03" "Redare" \
-   "04" "Streaming" \
-   "05" "Paraseste programul"  2>$tempfile
+   "03" "Screenshot" \
+   "04" "Redare" \
+   "05" "Streaming" \
+   "06" "Paraseste programul"  2>$tempfile
   selectie0=$?
   selectat=`cat $tempfile`
   
   case "$selectat" in
     01) ./configurare;;
     02) ./captura;;
-    03) ./redare;;
-    04) ./streaming;;
-    05) echo "Cuuui ma laasi?!! ( opt. $selectat )"
+    03) ./screenshot;;
+    04) ./redare;;
+    05) ./streaming;;
+    06) echo "Cuuui ma laasi?!! ( opt. $selectat )"
        echo "desktop=$desktop"
        echo "test_tty=$test_tty"
        echo "DIALOG=$DIALOG"
