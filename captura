@@ -3,10 +3,8 @@
 . `pwd`/config
 # offset: necesar deocamdata, cel putin in XFCE
 # egal cu inaltimea barei de decorare superioare a ferestrelor
-offsY=-22
+#offsY=-22
 
-#codec video
-video_out="-vcodec libx264 -preset ultrafast"
 
 ############## Functii #############
 
@@ -29,6 +27,8 @@ until [ "$selectie1" == "1" ]; do
 # reinitializam optiunile audio la fiecare loop
 audio_in="-f alsa -i hw:0"
 audio_out="-acodec libmp3lame -ab 96k"
+#codec video
+video_out="-vcodec libx264 -preset ultrafast"
 
 $DIALOG --title "Captura" --clear \
         --menu "Alegeti optiunea dorita:" 20 80 15 \
@@ -39,10 +39,14 @@ $DIALOG --title "Captura" --clear \
  "05" "Camera web, cu sunet" \
  "06" "Fereastra, fara sunet" \
  "07" "Fereastra, cu sunet" \
- "08" "Terminal tty, fara sunet" \
- "09" "Terminal tty, cu sunet" \
- "10" "Terminal tty, cu sunet si miniatura camera" \
- "11" "Iesire"  2>$tempfile1
+ "08" "Urmareste soarecul, fara sunet" \
+ "09" "Urmareste soarecul, cu sunet" \
+ "10" "Captura in chenar, fara sunet" \
+ "11" "Captura in chenar, cu sunet" \
+ "12" "Terminal tty, fara sunet" \
+ "13" "Terminal tty, cu sunet" \
+ "14" "Terminal tty, cu sunet si miniatura camera" \
+ "15" "Iesire"  2>$tempfile1
 selectie1=$?
 selectat1=`cat $tempfile1`
 echo $selectat1
@@ -63,11 +67,11 @@ case "$selectat1" in
   04) nume_fis="wcap_fs-$data.mp4"
       audio_in=""
       audio_out=""
-      video_in="-f video4linux2 -i /dev/video0 -r 25 -s $cam_web"
+      video_in="-f video4linux2 -i /dev/$dev -r 25 -s $cam_web"
       $(captura) ;;
 
   05) nume_fis="wcap-$data.mp4"
-      video_in="-f video4linux2 -i /dev/video0 -r 25 -s $cam_web"
+      video_in="-f video4linux2 -i /dev/$dev -r 25 -s $cam_web"
       $(captura) ;;
 
   06) nume_fis="fcap_fs-$data.mp4"
@@ -124,19 +128,51 @@ case "$selectat1" in
       wmctrl -a $nume #-b add,above
       $(captura) ;;
 
-  08) nume_fis="ttycap_fs-$data.mp4"
-      audio_in=""
-      audio_out=""
-      video_in="-f fbdev -i /dev/fb0 -r 25 " #-s $desktop
-      $(captura) ;;
-  09) 
-      nume_fis="ttycap-$data.mp4"
-      video_in="-f fbdev -i /dev/fb0 -r 25 -s " #$desktop"
-      $(captura) ;;
-  10) echo "To do!" ;;
+  08)	nume_fis="followcap_fs-$data.mp4"
+	audio_in=""
+	audio_out=""
+	video_in="-f x11grab -follow_mouse centered -show_region 1 -r 25 -s $rezfollow -i :0.0"
+       $(captura);;
+	
+  09) 	nume_fis="followcap_fs-$data.mp4"
+	video_in="-f x11grab -follow_mouse centered -show_region 1 -r 25 -s $rezfollow -i :0.0"
+       $(captura);;
 
-  11) echo "Iesire - opt. $selectat1"
-      exit 0 ;;
+  10) 	$DIALOG --title "Inputbox - Example" \
+		--backtitle "unstableme.blogspot.com" \
+		--inputbox "Introduceti rezolutia si coordonatele: ex 500x500 20,30" 20 100  2>$tempfile
+			selectat2=`cat $tempfile`
+	rez=`echo $selectat2|awk '{print $1}'`
+	coordonate=`echo $selectat2|awk '{print $2}'`
+	nume_fis="chenarcap_fs-$data.mp4"
+	audio_in=""
+	audio_out=""
+	video_in="-f x11grab -show_region 1 -r 25 -s $rez -i :0.0+$coordonate"
+	$(captura);;
+
+  11)	$DIALOG --title "Inputbox - Example" \
+		--backtitle "unstableme.blogspot.com" \
+		--inputbox "Introduceti rezolutia si coordonatele: ex 500x500 20,30" 8 50  2>$tempfile
+			selectat2=`cat $tempfile`
+	rez=`echo $selectat2|awk '{print $1}'`
+	coordonate=`echo $selectat2|awk '{print $2}'`
+	nume_fis="chenarcap_fs-$data.mp4"
+	video_in="-f x11grab -show_region 1 -r 25 -s $rez -i :0.0+$coordonate"
+	$(captura);;
+
+  12) 	nume_fis="ttycap_fs-$data.mp4"
+      	audio_in=""
+      	audio_out=""
+      	video_in="-f fbdev -i /dev/fb0 -r 25 "
+      	$(captura) ;;
+  13) 	nume_fis="ttycap-$data.mp4"
+      	video_in="-f fbdev -i /dev/fb0 -r 25 "
+      	$(captura) ;;
+
+  14) 	echo "To do!" ;;
+
+  15) 	echo "Iesire - opt. $selectat1"
+      	exit 0 ;;
 esac
 
 if [ "$selectie1" == "255" ]; then
