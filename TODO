@@ -36,3 +36,16 @@ Streaming - de stabilit ce acem nevoie (bionel/calvarr)
 
 Altele: ???
 - Modul spion :) (am putea sa ne conectam de la distanta prin ssh, sau sa lasam ca scriptul sa mici capturi, sau poze desktop, inregistrari audio, pe care sa le trimita pe mail etc...)
+
+################subsol######################
+# de citit despre v4l2-ctl -L 
+v4l2-ctl -c <option>=<value>
+
+exemplu captura oss:
+ffmpeg -f oss -i /dev/dsp /tmp/oss.wav
+pulse:
+ffmpeg -f pulse -i default /tmp/pulse.wav
+
+webcam:
+ffplay -f video4linux2 -framerate 30 -video_size hd720 /dev/video0
+
