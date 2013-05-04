@@ -29,3 +29,7 @@ desktop=`grep -i "initial mode" /var/log/Xorg.0.log|sed -n '2p'|awk '{print $NF}
 cam_web=640x480
 # dispozitiv de captura
 dev=video0
+# rezolutie chenar urmarire soarece
+rezfollow=500x500
+#liber#
+#liber#
