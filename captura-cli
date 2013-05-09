@@ -92,8 +92,8 @@ trap "rm -f $tempfile" 0 1 2 5 15
 
 until [ "$selectie0" == "1" ]; do
 
-  $DIALOG --backtitle "Utilitar captura v. foarte alfa" \
-	  --title "Varianta calvarr/bionel" --clear \
+  $DIALOG --backtitle "captura-cli" \
+	  --title "Autori: calvarr/bionel" --clear \
           --menu "Meniu Principal:" 20 80 10 \
    "01" "Configurare" \
    "02" "Captura" \
