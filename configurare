@@ -3,9 +3,8 @@
 echo locatia $locatia #debug
 procesator=`grep -i "procesare=" $locatia/config|sed 's/=/ /'|awk '{print $2}'`
   trap "rm -f $tempfile" 0 1 2 5 15
-	$DIALOG --backtitle "Utilitar captura v. foarte alfa" \
-	 	 --title "Varianta calvarr/bionel" --clear \
-         	  --menu "Meniu Principal:" 20 80 10 \
+	$DIALOG --backtitle "Modul configurare:" \
+         	--menu "Alegeti optiunea pentru configurare:" 30 80 20 \
 	"01" "Mod procesare" \
 	"02" "Player redare" \
 	"03" "Cale salvare capturi" \
