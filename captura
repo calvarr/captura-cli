@@ -17,7 +17,12 @@ echo procesez...
 $procesare -loglevel 0 $audio_in $video_in $video_out $audio_out $dir_salvare/$nume_fis
 stty sane
 }
-
+stop()
+{
+$DIALOG --title "captura-cli" \
+--msgbox "\n Opreste inregistrarea" 6 50 
+killall ffmpeg
+}
 ############### MENIU ##############
 
 tempfile1=`tempfile 2>/dev/null` || tempfile1=/tmp/capclitmp1$$
@@ -34,8 +39,8 @@ audio_out="-acodec libmp3lame -ab 96k"
 #codec video
 video_out="-vcodec libx264 -preset ultrafast"
 
-$DIALOG --title "Captura" --clear \
-        --menu "Alegeti optiunea dorita:" 20 80 15 \
+$DIALOG --title "Modul captura" --clear \
+        --menu "Alegeti optiunea dorita:" 30 80 25 \
  "01" "Desktop complet, fara sunet" \
  "02" "Desktop complet, cu sunet" \
  "03" "Desktop complet, cu sunet si miniatura camera" \
@@ -60,11 +65,13 @@ case "$selectat1" in
       audio_in=""
       audio_out=""
       video_in="-f x11grab -r 25 -s $desktop -i :0.0"
-      $(captura);;
+      $(captura)&
+	$(stop);;
 
   02) nume_fis="dtcap-$data.mp4"
       video_in="-f x11grab -r 25 -s $desktop -i :0.0"
-      $(captura) ;;
+      $(captura)&
+	$(stop);;
 
   03) echo "To do!" ;;
 
@@ -72,11 +79,13 @@ case "$selectat1" in
       audio_in=""
       audio_out=""
       video_in="-f video4linux2 -i /dev/$dev -r 25 -s $cam_web"
-      $(captura) ;;
+      $(captura)&
+	$(stop);;
 
   05) nume_fis="wcap-$data.mp4"
       video_in="-f video4linux2 -i /dev/$dev -r 25 -s $cam_web"
-      $(captura) ;;
+      $(captura)&
+	$(stop);;
 
   06) nume_fis="fcap_fs-$data.mp4"
       tempfile2=/tmp/capclitmp2
@@ -104,7 +113,8 @@ case "$selectat1" in
       audio_out=""
       video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
       wmctrl -a $nume #-b add,above
-      $(captura) ;;
+      $(captura)&
+	$(stop);;
 
   07) nume_fis="fcap-$data.mp4"
       tempfile2=/tmp/capclitmp2
@@ -130,17 +140,20 @@ case "$selectat1" in
       echo $nume #debug
       video_in="-f x11grab -show_region 1 -r 25 -s $rezolutie -i :0.0+$pozitie"
       wmctrl -a $nume #-b add,above
-      $(captura) ;;
+      $(captura)&
+	$(stop);;
 
   08)	nume_fis="followcap_fs-$data.mp4"
 	audio_in=""
 	audio_out=""
 	video_in="-f x11grab -follow_mouse centered -show_region 1 -r 25 -s $rezfollow -i :0.0"
-       $(captura);;
+       $(captura)&
+	$(stop);;
 	
   09) 	nume_fis="followcap_fs-$data.mp4"
 	video_in="-f x11grab -follow_mouse centered -show_region 1 -r 25 -s $rezfollow -i :0.0"
-       $(captura);;
+       $(captura)&
+	$(stop);;
 
   10) 	$DIALOG --title "Inputbox - Example" \
 		--backtitle "unstableme.blogspot.com" \
@@ -152,7 +165,8 @@ case "$selectat1" in
 	audio_in=""
 	audio_out=""
 	video_in="-f x11grab -show_region 1 -r 25 -s $rez -i :0.0+$coordonate"
-	$(captura);;
+	$(captura)&
+	$(stop);;
 
   11)	$DIALOG --title "Inputbox - Example" \
 		--backtitle "unstableme.blogspot.com" \
@@ -162,16 +176,19 @@ case "$selectat1" in
 	coordonate=`echo $selectat2|awk '{print $2}'`
 	nume_fis="chenarcap_fs-$data.mp4"
 	video_in="-f x11grab -show_region 1 -r 25 -s $rez -i :0.0+$coordonate"
-	$(captura);;
+	$(captura)&
+	$(stop);;
 
   12) 	nume_fis="ttycap_fs-$data.mp4"
       	audio_in=""
       	audio_out=""
       	video_in="-f fbdev -i /dev/fb0 -r 25 "
-      	$(captura) ;;
+      	$(captura)&
+	$(stop);;
   13) 	nume_fis="ttycap-$data.mp4"
       	video_in="-f fbdev -i /dev/fb0 -r 25 "
-      	$(captura) ;;
+      	$(captura)&
+	$(stop);;
 
   14) 	echo "To do!" ;;
 
