@@ -1,20 +1,40 @@
 #!/bin/bash -x
 . `pwd`/config
+trap "rm -f $tempfile" 0 1 2 5 15
+#http://sirupsen.com/a-simple-imgur-bash-screenshot-utility/
+function uploadImage {
+  curl -s -F "image=@$1" -F "key=486690f872c678126a2c09a9e196ce1b" https://imgur.com/api/upload.xml | grep -E -o "<original_image>(.)*</original_image>" | grep -E -o "http://i.imgur.com/[^<]*"
+}
 $DIALOG --backtitle "Modul Screenshot" \
         --menu "Alegeti optiunea dorita:" 20 80 10 \
 	"01" "Screenshot Desktop" \
-	"02" "Screenshot TTY"   \
-	"03" "Screenshot Webcam" 2>$tempfile
+	"02" "Chenar Desktop" \
+	"03" "Screenshot TTY"   \
+	"04" "Screenshot Webcam" \
+	"05" "Upload Imgrur" 2>$tempfile
   selectie0=$?
   selectat=`cat $tempfile`
 case "$selectat" in
-    01) $procesare -f x11grab -r 25 -s $desktop -i :0.0 \
-	$dir_salvare/screenshot_Desktop$$.jpeg;;
+    01) scrot $dir_salvare/screenshot_Desktop$$.jpeg;;
+	#$procesare -f x11grab -r 25 -s $desktop -i :0.0 \
+    02) scrot -s $dir_salvare/screenshot_Desktop$$.jpeg;;
 
-    02) $procesare -f fbdev -frames:v 1 -r 1 -i /dev/fb0 \
+    03) $procesare -f fbdev -frames:v 1 -r 1 -i /dev/fb0 \
 	$dir_salvare/screenshot_TTY$$.jpeg;;
 
-    03) $procesare -f video4linux2 -i /dev/$dev -f image2 \
+    04) $procesare -f video4linux2 -i /dev/$dev -f image2 \
 	-y -ss 0.375 -q 0 -vframes 1 $dir_salvare/screenshot_Webcam$$.jpeg;; #-ss primele cadre sunt intunecate pana se calibreaza webcam
-
+    05) poze=`ls $dir_salvare|grep jpeg|nl`
+	  $DIALOG  --title "Upload Imgur" --clear \
+                  --menu "Selectati poza :" 20 80 10  $poze 2> $tempfile
+        selectie=$?
+ 	poza=`cat $tempfile`
+ 		poza_nr=`ls $dir_salvare|grep jpeg|sed -n "${poza}p"`
+	echo pozanr $poza_nr #debug
+	uploadImage $dir_salvare/$poza_nr > $tempfile
+	adresa=`cat $tempfile`
+	$DIALOG --title "Adresa imgur:" \
+	--msgbox "\n $adresa" 6 50
+	xdg-open $adresa
+;;
 esac
