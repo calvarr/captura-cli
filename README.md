@@ -12,12 +12,14 @@ bionel: https://github.com/bionel
 Dependinte:
 	dialog sau/si xdialog,gdialog,kdialog etc.
 	ffmpeg sau avconv
+	sed,awk,grep,curl
+	scrot
 	fbdev
 	cvlc sau mplayer
 	wmctrl
 ===========
 Configurare fbdev (captura TTY):
-# chmod a+rw /dev/fb0
+chmod a+rw /dev/fb0
 
 ===========
 Stream nesecurizat:
